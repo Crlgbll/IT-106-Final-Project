@@ -1,0 +1,47 @@
+<students>
+    <student>
+        <name>Patrick James Dionen</name>
+        <id>211-00543</id>
+        <age>21</age>
+        <address>Kinabjangan, Nasipit, Agusan del Norte</address>
+        <contact>09151320921</contact>
+         <program>BSIT</program>
+        <college>CCIS </college>
+    </student>
+     <student>
+        <name>Aubriel Bolotaolo</name>
+        <id>211-00619</id>
+        <age>21</age>
+        <address>Ambago, Butuan City</address>
+        <contact>09151320921</contact>
+        <program>BSIT</program>
+        <college>CCIS </college>
+    </student>
+     <student>
+        <name>Charity Eramis</name>
+        <id>211-00110</id>
+        <age>20</age>
+        <address>San Vicente, Butuan City</address>
+        <contact>09151320921</contact>
+        <program>BSIT</program>
+        <college>CCIS </college>
+    </student>
+     <student>
+        <name>Jhonn Dave C. Bohol</name>
+        <id>211-09213</id>
+        <age>21</age>
+        <address>San Vicente, Buenavista Agusan Del Norte</address>
+        <contact>09151320921</contact>
+        <program>BSCS</program>
+        <college>CCIS </college>
+    </student>
+    <student>
+        <name>Steffany Aclan</name>
+        <id>211-11003</id>
+        <age>21</age>
+        <address>Villa Kannanga, Butuan City</address>
+        <contact>09151320921</contact>
+        <program>BSIS</program>
+        <college>CCIS </college>
+    </student>
+</students>
