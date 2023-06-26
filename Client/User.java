@@ -5,14 +5,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import java.rmi.RemoteException;
 
-import Server.*;
 import Server.StudentInt;
 
 public class User extends JFrame {
@@ -48,9 +45,7 @@ public class User extends JFrame {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             getContentPane().setLayout(null);
 
-            JPopupMenu popupMenu = new JPopupMenu();
-            popupMenu.setBounds(0, 0, 16, 70);
-            addPopup(getContentPane(), popupMenu);
+        
 
             lblUserMenu = new JLabel("USER'S MENU");
             lblUserMenu.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -110,6 +105,7 @@ public class User extends JFrame {
             getContentPane().add(btnUpdate);
             btnUpdate.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    String searchID = SearchID.getText();
                     String studentID = student_ID.getText();
                     String name = Name.getText();
                     int age = Integer.parseInt(Age.getText());
@@ -120,15 +116,10 @@ public class User extends JFrame {
 
                     try {
                         // Check if the record exists
-                        
-                        if (recordExists) {
-                            // Call the update method on the server
-                            server.update(studentID, name, age, address, contactNumber, program, college);
-                            JOptionPane.showMessageDialog(User.this, "Data updated successfully.");
-                        } else {
-                            JOptionPane.showMessageDialog(User.this, "Data update failed. Record does not exist.");
-                        }
-                    } catch (RemoteException | SQLException e1) {
+                        server.update(searchID, studentID, name, age, address, contactNumber, program, college);
+                        JOptionPane.showMessageDialog(User.this, "Data updated successfully.");
+                        System.out.println("Hello world");
+                    } catch (Exception e1) {
                         e1.printStackTrace();
                         JOptionPane.showMessageDialog(User.this, "Data update failed.");
                     }
@@ -246,9 +237,9 @@ public class User extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(User.this, "Searching...");
                     String idNumber = SearchID.getText(); // Get the value from the SearchID text field
-                    User user = new User();
+                    // User user = new User();
                     try {
-                        server.search(idNumber, user); // Pass the idNumber to the search method
+                        server.search(idNumber, User.this); // Pass the idNumber to the search method
                     } catch (RemoteException | SQLException err) {
                         err.printStackTrace();
                     }
@@ -281,23 +272,5 @@ public class User extends JFrame {
         }
     }
 
-    private static void addPopup(Component component, final JPopupMenu popup) {
-        component.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    showMenu(e);
-                }
-            }
-
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    showMenu(e);
-                }
-            }
-
-            private void showMenu(MouseEvent e) {
-                popup.show(e.getComponent(), e.getX(), e.getY());
-            }
-        });
-    }
+    
 }

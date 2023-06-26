@@ -23,10 +23,10 @@ public class Server extends UnicastRemoteObject implements StudentInt {
     }
 
     @Override
-    public void update(String id, String name, int age, String address, String contact_number, String program,
+    public void update(String search, String id, String name, int age, String address, String contact_number, String program,
             String college) throws RemoteException, SQLException {
         Update update = new Update();
-        update.update(id, name, age, address, contact_number, program, college);
+        update.update(search, id, name, age, address, contact_number, program, college);
     }
 
     @Override
