@@ -1,185 +1,263 @@
 package Client;
 
 import javax.swing.*;
+
 import java.awt.*;
-import java.awt.event.*;
-import java.rmi.RemoteException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.SQLException;
+import java.rmi.RemoteException;
+
+import Server.*;
 import Server.StudentInt;
-import javax.swing.JTextField;
 
-public class User extends WindowAdapter implements ActionListener {
-    private JFrame frame;
-    private JPanel pnlSort;
-    private JPanel pnlDelete;
-    private JPanel pnlDisplay;
-    private JPanel pnlUpdate;
-    private JLabel lblSort;
-    private JLabel lblDelete;
-    private JLabel lblDisplay;
-    private JLabel lblNewLabel_4;
-    private JLabel lblUserMenu;
-
+public class User extends JFrame {
     private StudentInt server;
+    private JLabel lblUserMenu;
+    public JTextField Name;
+    public JTextField Age;
+    public JTextField Program;
+    public JTextField Address;
+    public JTextField College;
+    public JTextField Contact;
+    public JTextField student_ID;
+    public JTextField SearchID;
+    private JLabel lblAge;
+    private JLabel lblContactNo;
+    private JLabel lblAddress;
+    private JLabel lblProgram;
+    private JLabel lblCollege;
+    private JLabel lblID_1;
 
     public User() {
-        frame = new JFrame("User GUI");
-        frame.setBackground(Color.PINK);
-        frame.getContentPane().setBackground(Color.PINK);
-        frame.setSize(407, 546);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+        try {
+            // Get the reference to the remote Student service
 
-        JPanel pnlExtractXML = new JPanel();
-        pnlExtractXML.setBackground(UIManager.getColor("activeCaption"));
-        pnlExtractXML.setBounds(119, 281, 156, 36);
-        frame.getContentPane().add(pnlExtractXML);
-        pnlExtractXML.setLayout(null);
+            setTitle("User GUI");
 
-        JLabel lblExtractXML = new JLabel("Extract XML");
-        lblExtractXML.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        lblExtractXML.setBounds(42, 11, 114, 14);
-        pnlExtractXML.add(lblExtractXML);
+            // Set the astro space theme colors
+            Color darkBlue = new Color(0, 17, 51);
+            Color white = new Color(255, 255, 255);
 
-        pnlSort = new JPanel();
-        pnlSort.setBackground(UIManager.getColor("activeCaption"));
-        pnlSort.setBounds(39, 150, 140, 46);
-        frame.getContentPane().add(pnlSort);
-        pnlSort.setLayout(null);
+            getContentPane().setBackground(darkBlue);
+            setSize(843, 472);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            getContentPane().setLayout(null);
 
-        lblSort = new JLabel("Sort");
-        lblSort.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        lblSort.setBounds(54, 11, 64, 24);
-        pnlSort.add(lblSort);
+            JPopupMenu popupMenu = new JPopupMenu();
+            popupMenu.setBounds(0, 0, 16, 70);
+            addPopup(getContentPane(), popupMenu);
 
-        pnlDelete = new JPanel();
-        pnlDelete.setBackground(UIManager.getColor("activeCaption"));
-        pnlDelete.setLayout(null);
-        pnlDelete.setBounds(39, 213, 140, 46);
-        frame.getContentPane().add(pnlDelete);
+            lblUserMenu = new JLabel("USER'S MENU");
+            lblUserMenu.setFont(new Font("SansSerif", Font.BOLD, 14));
+            lblUserMenu.setForeground(white);
+            lblUserMenu.setBounds(82, 34, 134, 36);
+            getContentPane().add(lblUserMenu);
 
-        lblDelete = new JLabel("Delete");
-        lblDelete.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        lblDelete.setBounds(48, 11, 46, 24);
-        pnlDelete.add(lblDelete);
+            JButton btnSort = new JButton("Sort");
+            btnSort.setBounds(55, 81, 149, 42);
+            getContentPane().add(btnSort);
 
-        pnlDisplay = new JPanel();
-        pnlDisplay.setBackground(UIManager.getColor("activeCaption"));
-        pnlDisplay.setLayout(null);
-        pnlDisplay.setBounds(215, 150, 140, 46);
-        frame.getContentPane().add(pnlDisplay);
-
-        lblDisplay = new JLabel("Display");
-        lblDisplay.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        lblDisplay.setBounds(51, 11, 52, 24);
-        pnlDisplay.add(lblDisplay);
-
-        pnlUpdate = new JPanel();
-        pnlUpdate.setBackground(UIManager.getColor("activeCaption"));
-        pnlUpdate.setLayout(null);
-        pnlUpdate.setBounds(215, 213, 140, 46);
-        frame.getContentPane().add(pnlUpdate);
-
-        lblNewLabel_4 = new JLabel("Update");
-        lblNewLabel_4.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        lblNewLabel_4.setBounds(49, 11, 53, 24);
-        pnlUpdate.add(lblNewLabel_4);
-
-        lblUserMenu = new JLabel("USER'S MENU");
-        lblUserMenu.setFont(new Font("SansSerif", Font.BOLD, 14));
-        lblUserMenu.setBounds(151, 99, 134, 36);
-        frame.getContentPane().add(lblUserMenu);
-
-        JTextField studentIdTextField = new JTextField();
-        studentIdTextField.setBounds(35,  350, 320, 30);
-        studentIdTextField.setBackground(UIManager.getColor("activeCaption"));
-        studentIdTextField.setFont(new Font("SansSerif", Font.PLAIN, 14));
-
-        frame.getContentPane().add(studentIdTextField);
-        pnlExtractXML.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    server.parse();
-                } catch (RemoteException err) {
-                    err.printStackTrace();
+            btnSort.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        server.sort();
+                    } catch (RemoteException | SQLException err) {
+                        System.err.println("Client err: " + err.toString());
+                    }
+                    JOptionPane.showMessageDialog(User.this, "Sorting...");
                 }
-                JOptionPane.showMessageDialog(frame, "Extracting XML...");
-            }
-        });
+            });
 
-        pnlSort.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    System.out.println("Clicked");
-                    server.sort();
-                } catch (RemoteException | SQLException err) {
-                    System.err.println("Client err: " + err.toString());
-                    err.printStackTrace();
+            JButton btnDisplay = new JButton("Display");
+            btnDisplay.setBounds(55, 144, 149, 42);
+            getContentPane().add(btnDisplay);
+
+            btnDisplay.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(User.this, "Displaying...");
+                    try {
+                        server.display();
+                    } catch (RemoteException | SQLException err) {
+                        err.printStackTrace();
+                    }
                 }
-                JOptionPane.showMessageDialog(frame, "Sort Users...");
-            }
-        });
+            });
 
-        pnlDisplay.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    // Invoke the display method on the server
-                    System.out.println("Display is clicked...");
-                    server.display();
-                } catch (RemoteException err) {
-                    err.printStackTrace();
-                } catch (SQLException err) {
-                    System.err.println("SQL error: " + err.toString());
-                    err.printStackTrace();
+            JButton btnDelete = new JButton("Delete");
+            btnDelete.setBounds(55, 204, 149, 42);
+            getContentPane().add(btnDelete);
+            btnDelete.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String studentID = student_ID.getText();
+                    System.out.println("Deleted");
+                    System.out.println(studentID);
+                    try {
+                        server.delete(studentID);
+                    } catch (RemoteException | SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                    JOptionPane.showMessageDialog(User.this, "Deleting User...");
                 }
-                JOptionPane.showMessageDialog(frame, "Display Users...");
-            }
-        });
+            });
 
-        pnlDelete.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Scanner sc = new Scanner.
-                String studentID = studentIdTextField.getText();
-                System.out.println("Deleted");
-                System.out.println(studentID);
-                 try {
-                    server.delete(studentID);
-                } catch (RemoteException | SQLException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+            JButton btnUpdate = new JButton("Update");
+            btnUpdate.setBounds(55, 264, 149, 42);
+            getContentPane().add(btnUpdate);
+            btnUpdate.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String studentID = student_ID.getText();
+                    String name = Name.getText();
+                    int age = Integer.parseInt(Age.getText());
+                    String address = Address.getText();
+                    String contactNumber = Contact.getText();
+                    String program = Program.getText();
+                    String college = College.getText();
+
+                    try {
+                        // Check if the record exists
+                        
+                        if (recordExists) {
+                            // Call the update method on the server
+                            server.update(studentID, name, age, address, contactNumber, program, college);
+                            JOptionPane.showMessageDialog(User.this, "Data updated successfully.");
+                        } else {
+                            JOptionPane.showMessageDialog(User.this, "Data update failed. Record does not exist.");
+                        }
+                    } catch (RemoteException | SQLException e1) {
+                        e1.printStackTrace();
+                        JOptionPane.showMessageDialog(User.this, "Data update failed.");
+                    }
                 }
-                JOptionPane.showMessageDialog(frame, "Deleting User...");
-            }
-        });
+            });
 
-        pnlUpdate.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-               String studentID = studentIdTextField.getText();
-               System.out.println("Updated");
-               System.out.println(studentID);
-                try {
-                    server.update(studentID);
-                } catch (RemoteException | SQLException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+            JButton btnExtractXML = new JButton("Extract XML");
+            btnExtractXML.setBounds(55, 327, 149, 42);
+            getContentPane().add(btnExtractXML);
+            btnExtractXML.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(User.this, "Extracting Data from XML...");
+                    try {
+                        server.parse();
+                    } catch (RemoteException err) {
+                        err.printStackTrace();
+                    }
                 }
-                JOptionPane.showMessageDialog(frame, "Updating...");
-            }
-        });
+            });
+            // Name for Update Method
+            JLabel lblNewLabel = new JLabel("Name");
+            lblNewLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            lblNewLabel.setForeground(white);
+            lblNewLabel.setBounds(330, 142, 97, 21);
+            getContentPane().add(lblNewLabel);
 
-        frame.setVisible(true);
-    }
+            Name = new JTextField();
+            Name.setBounds(330, 162, 180, 30);
+            getContentPane().add(Name);
+            Name.setColumns(10);
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Handle action events if needed
+            // Age for Update Method
+            lblAge = new JLabel("Age");
+            lblAge.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            lblAge.setForeground(white);
+            lblAge.setBounds(331, 202, 97, 21);
+            getContentPane().add(lblAge);
+
+            Age = new JTextField();
+            Age.setBounds(330, 222, 180, 31);
+            getContentPane().add(Age);
+            Age.setColumns(10);
+
+            // Program for Update Method
+            lblProgram = new JLabel("Program");
+            lblProgram.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            lblProgram.setForeground(white);
+            lblProgram.setBounds(568, 202, 97, 21);
+            getContentPane().add(lblProgram);
+
+            Program = new JTextField();
+            Program.setBounds(568, 222, 180, 30);
+            getContentPane().add(Program);
+            Program.setColumns(10);
+
+            // Address for Update Method
+            lblAddress = new JLabel("Address");
+            lblAddress.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            lblAddress.setForeground(white);
+            lblAddress.setBounds(568, 142, 97, 21);
+            getContentPane().add(lblAddress);
+
+            Address = new JTextField();
+            Address.setBounds(568, 162, 180, 30);
+            getContentPane().add(Address);
+            Address.setColumns(10);
+
+            // College for Update Method
+            lblCollege = new JLabel("College");
+            lblCollege.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            lblCollege.setForeground(white);
+            lblCollege.setBounds(568, 262, 97, 21);
+            getContentPane().add(lblCollege);
+
+            College = new JTextField();
+            College.setBounds(568, 284, 180, 30);
+            getContentPane().add(College);
+            College.setColumns(10);
+
+            // Contact number for Update Method
+            lblContactNo = new JLabel("Contact no.");
+            lblContactNo.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            lblContactNo.setForeground(white);
+            lblContactNo.setBounds(330, 262, 97, 21);
+            getContentPane().add(lblContactNo);
+
+            Contact = new JTextField();
+            Contact.setBounds(330, 284, 180, 30);
+            getContentPane().add(Contact);
+            Contact.setColumns(10);
+
+            // Student ID for Update
+            student_ID = new JTextField();
+            student_ID.setBounds(331, 102, 180, 26);
+            getContentPane().add(student_ID);
+            student_ID.setColumns(10);
+
+            lblID_1 = new JLabel("ID Number");
+            lblID_1.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            lblID_1.setForeground(white);
+            lblID_1.setBounds(331, 82, 97, 21);
+            getContentPane().add(lblID_1);
+
+            // Search ID for Update and Delete Method
+            SearchID = new JTextField();
+            SearchID.setBounds(510, 41, 180, 26);
+            getContentPane().add(SearchID);
+            SearchID.setColumns(10);
+
+            JButton btnSearchID = new JButton("Search ID");
+            btnSearchID.setBounds(700, 41, 95, 26);
+            getContentPane().add(btnSearchID);
+
+            btnSearchID.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(User.this, "Searching...");
+                    String idNumber = SearchID.getText(); // Get the value from the SearchID text field
+                    User user = new User();
+                    try {
+                        server.search(idNumber, user); // Pass the idNumber to the search method
+                    } catch (RemoteException | SQLException err) {
+                        err.printStackTrace();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void serverConnection(String host, int port) {
@@ -197,8 +275,29 @@ public class User extends WindowAdapter implements ActionListener {
         User user = new User();
         try {
             user.serverConnection("localhost", 9100);
+            user.setVisible(true); // Make the GUI window visible
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void addPopup(Component component, final JPopupMenu popup) {
+        component.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showMenu(e);
+                }
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showMenu(e);
+                }
+            }
+
+            private void showMenu(MouseEvent e) {
+                popup.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
     }
 }

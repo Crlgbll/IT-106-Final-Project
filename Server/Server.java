@@ -5,8 +5,10 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.rmi.RemoteException;
 
+import Client.User;
+
+import java.rmi.RemoteException;
 
 public class Server extends UnicastRemoteObject implements StudentInt {
 
@@ -35,14 +37,20 @@ public class Server extends UnicastRemoteObject implements StudentInt {
 
     @Override
     public void display() throws RemoteException, SQLException {
-        Display dis = new Display();
-        dis.displayStudentData();
+        Display display = new Display();
+        display.displayStudentData();
     }
 
     @Override
     public void parse() throws RemoteException {
         Parser parse = new Parser();
         parse.displayXML();
+    }
+
+    @Override
+    public void search(String idNumber, User user) throws RemoteException, SQLException {
+        Search search = new Search();
+        search.searchRecord(idNumber, user);
     }
 
     public static void main(String[] args) {
