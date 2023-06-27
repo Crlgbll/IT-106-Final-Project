@@ -3,6 +3,7 @@ package Server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.List;
 
 import Client.User;
 
@@ -13,5 +14,7 @@ public interface StudentInt extends Remote {
     public void display() throws RemoteException, SQLException;
     public void parse() throws RemoteException;
     public void search(String id, User user) throws RemoteException, SQLException;
-    
+    public List<String> performSort() throws RemoteException, SQLException; // New method added
+    public List<String> displayStudentData() throws RemoteException, SQLException;
+
 }

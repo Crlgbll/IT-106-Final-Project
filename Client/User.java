@@ -9,6 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import java.rmi.RemoteException;
+import java.util.List;
 
 import Server.StudentInt;
 
@@ -45,8 +46,6 @@ public class User extends JFrame {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             getContentPane().setLayout(null);
 
-        
-
             lblUserMenu = new JLabel("USER'S MENU");
             lblUserMenu.setFont(new Font("SansSerif", Font.BOLD, 14));
             lblUserMenu.setForeground(white);
@@ -59,12 +58,28 @@ public class User extends JFrame {
 
             btnSort.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(User.this, "Sorting...");
                     try {
-                        server.sort();
+                        List<String> sortedData = server.performSort(); // Retrieve the sorted data from the server
+
+                        // Display the sorted data in the client terminal
+                        System.out.println("Sorted Data:");
+                        for (String studentData : sortedData) {
+                            System.out.println(studentData);
+                        }
+
+                        StringBuilder message = new StringBuilder("Sorted Data:\n");
+                        for (String studentData : sortedData) {
+                            message.append(studentData).append("\n");
+                        }
+
+                        // Display the message in a dialog box
+                        JOptionPane.showMessageDialog(User.this, message.toString());
+
                     } catch (RemoteException | SQLException err) {
                         System.err.println("Client err: " + err.toString());
                     }
-                    JOptionPane.showMessageDialog(User.this, "Sorting...");
+
                 }
             });
 
@@ -76,9 +91,24 @@ public class User extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(User.this, "Displaying...");
                     try {
-                        server.display();
+                        List<String> studentData = server.displayStudentData();
+
+                        // Display the student data in the user terminal
+                        System.out.println("\n\n-------------------- DISPLAY -----------------\n\n");
+                        for (String data : studentData) {
+                            System.out.println(data);
+                        }
+
+                        StringBuilder message = new StringBuilder("Student Data:\n");
+                        for (String data : studentData) {
+                            message.append(data).append("\n");
+                        }
+
+                        // Display the message in a dialog box
+                        JOptionPane.showMessageDialog(User.this, message.toString());
+
                     } catch (RemoteException | SQLException err) {
-                        err.printStackTrace();
+                        System.err.println("Client err: " + err.toString());
                     }
                 }
             });
@@ -89,14 +119,16 @@ public class User extends JFrame {
             btnDelete.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String studentID = student_ID.getText();
-                    System.out.println("Deleted");
                     System.out.println(studentID);
                     try {
                         server.delete(studentID);
+                        JOptionPane.showMessageDialog(User.this, "User deleted successfully.");
+                        System.out.println("User deleted successfully.");
                     } catch (RemoteException | SQLException e1) {
                         e1.printStackTrace();
+                        JOptionPane.showMessageDialog(User.this, "User deletion failed.");
+                        System.out.println("User deletion failed.");
                     }
-                    JOptionPane.showMessageDialog(User.this, "Deleting User...");
                 }
             });
 
@@ -235,13 +267,16 @@ public class User extends JFrame {
 
             btnSearchID.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(User.this, "Searching...");
-                    String idNumber = SearchID.getText(); // Get the value from the SearchID text field
-                    // User user = new User();
+                    JTextField searchID = SearchID;
+                    String studentID = searchID.getText();
+                    System.out.println("Searching for student with ID: " + studentID);
                     try {
-                        server.search(idNumber, User.this); // Pass the idNumber to the search method
-                    } catch (RemoteException | SQLException err) {
-                        err.printStackTrace();
+                        boolean recordFound = server.search(studentID, User.this);
+                        if (!recordFound) {
+                            System.out.println("Record with ID " + studentID + " does not exist.");
+                        }
+                    } catch (RemoteException | SQLException e1) {
+                        e1.printStackTrace();
                     }
                 }
             });
@@ -272,5 +307,4 @@ public class User extends JFrame {
         }
     }
 
-    
 }

@@ -1,12 +1,17 @@
 package Server;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Display {
-    public void displayStudentData() {
+    public List<String> displayStudentData() {
+        List<String> studentData = new ArrayList<>();
+
         // Database connection details
         String url = "jdbc:mysql://localhost:3306/student_management";
         String username = "carlogaballo";
@@ -23,8 +28,6 @@ public class Display {
             // Execute the query and retrieve the result set
             ResultSet resultSet = statement.executeQuery();
 
-            System.out.println("\n\n-------------------- DISPLAY -----------------\n\n");
-            // Display the data
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 int age = resultSet.getInt("age");
@@ -34,14 +37,15 @@ public class Display {
                 String college = resultSet.getString("college");
                 String idNumber = resultSet.getString("id_number");
 
-                System.out.println("ID: " + idNumber);
-                System.out.println("Name: " + name);
-                System.out.println("Age: " + age);
-                System.out.println("Address: " + address);
-                System.out.println("Contact: " + contact);
-                System.out.println("Program: " + program);
-                System.out.println("College: " + college);
-                System.out.println("------------------");
+                String studentInfo = "ID: " + idNumber + "\n" +
+                                     "Name: " + name + "\n" +
+                                     "Age: " + age + "\n" +
+                                     "Address: " + address + "\n" +
+                                     "Contact: " + contact + "\n" +
+                                     "Program: " + program + "\n" +
+                                     "College: " + college + "\n";
+
+                studentData.add(studentInfo);
             }
 
             // Close the resources
@@ -51,7 +55,7 @@ public class Display {
         } catch (SQLException e) {
             System.out.println("An error occurred while displaying student data: " + e.getMessage());
         }
-    }
 
-    
+        return studentData;  // Add this line to return the studentData
+    }
 }

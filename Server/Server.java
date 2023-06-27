@@ -4,6 +4,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import Client.User;
@@ -23,7 +24,15 @@ public class Server extends UnicastRemoteObject implements StudentInt {
     }
 
     @Override
-    public void update(String search, String id, String name, int age, String address, String contact_number, String program,
+    public List<String> performSort() throws RemoteException, SQLException {
+        Sort sorter = new Sort();
+        List<String> sortedData = sorter.performSort();
+        return sortedData;
+    }
+
+    @Override
+    public void update(String search, String id, String name, int age, String address, String contact_number,
+            String program,
             String college) throws RemoteException, SQLException {
         Update update = new Update();
         update.update(search, id, name, age, address, contact_number, program, college);
@@ -35,10 +44,17 @@ public class Server extends UnicastRemoteObject implements StudentInt {
         deleteObj.delete(id);
     }
 
+
     @Override
     public void display() throws RemoteException, SQLException {
         Display display = new Display();
         display.displayStudentData();
+    }
+
+    @Override
+    public List<String> displayStudentData() throws RemoteException, SQLException {
+        Display display = new Display();
+        return display.displayStudentData();
     }
 
     @Override

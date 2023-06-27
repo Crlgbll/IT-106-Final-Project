@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Update {
-    public void update(String search, String id, String name, int age, String address, String contact_number, String program, String college) throws RemoteException {
+    public boolean update(String search, String id, String name, int age, String address, String contact_number, String program, String college) throws RemoteException {
         // Connect to the database and check if the record exists
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_management", "carlogaballo", "")) {
             // Check if the record exists
@@ -35,15 +35,19 @@ public class Update {
 
                 if (rowsAffected > 0) {
                     System.out.println("Data updated successfully.");
+                    return true; // Return true if update successful
                 } else {
                     System.out.println("Data update failed.");
+                    return false; // Return false if update failed
                 }
             } else {
                 // The record does not exist
                 System.out.println("Student does not exist.");
+                return false; // Return false if student does not exist
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false; // Return false if an exception occurred
         }
     }
 }

@@ -1,4 +1,5 @@
 package Server;
+
 import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,53 +18,58 @@ public class Search {
     private String password = "";
 
     public boolean searchRecord(String idNumber, User user) throws RemoteException, SQLException {
-    try (Connection conn = DriverManager.getConnection(url, username, password)) {
-        String query = "SELECT * FROM student_tbl WHERE id_number = ?";
-        PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, idNumber);
+        StringBuilder message = new StringBuilder();
+        boolean recordFound = false;
 
-        ResultSet resultSet = statement.executeQuery();
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            String query = "SELECT * FROM student_tbl WHERE id_number = ?";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, idNumber);
 
-        if (resultSet.next()) {
-            // Record found
-            System.out.println();
-            System.out.println("------------------Record found------------------");
-            System.out.println("ID Number: " + resultSet.getString("id_number"));
-            System.out.println("Name: " + resultSet.getString("name"));
-            System.out.println("Age: " + resultSet.getInt("age"));
-            System.out.println("Address: " + resultSet.getString("address"));
-            System.out.println("Contact: " + resultSet.getString("contact_number"));
-            System.out.println("Program: " + resultSet.getString("program"));
-            System.out.println("College: " + resultSet.getString("college"));
-            System.out.println("------------------");
+            ResultSet resultSet = statement.executeQuery();
 
-            String name = resultSet.getString("name");
-            int age = resultSet.getInt("age");
-            String address = resultSet.getString("address");
-            String contactNumber = resultSet.getString("contact_number");
-            String program = resultSet.getString("program");
-            String college = resultSet.getString("college");
+            if (resultSet.next()) {
+                // Record found
+                message.append("\n------------------Record found------------------\n");
+                message.append("ID Number: ").append(resultSet.getString("id_number")).append("\n");
+                message.append("Name: ").append(resultSet.getString("name")).append("\n");
+                message.append("Age: ").append(resultSet.getInt("age")).append("\n");
+                message.append("Address: ").append(resultSet.getString("address")).append("\n");
+                message.append("Contact: ").append(resultSet.getString("contact_number")).append("\n");
+                message.append("Program: ").append(resultSet.getString("program")).append("\n");
+                message.append("College: ").append(resultSet.getString("college")).append("\n");
+                message.append("------------------\n");
 
-            SwingUtilities.invokeLater(() -> {
-                user.Name.setText(name);
-                user.Age.setText(String.valueOf(age));
-                user.Address.setText(address);
-                user.Contact.setText(contactNumber);
-                user.Program.setText(program);
-                user.College.setText(college);
-            });
-            
-            return true;
-        } else {
-            // Record not found
-            System.out.println("Record with ID " + idNumber + " does not exist.");
-            return false;
+                String name = resultSet.getString("name");
+                int age = resultSet.getInt("age");
+                String address = resultSet.getString("address");
+                String contactNumber = resultSet.getString("contact_number");
+                String program = resultSet.getString("program");
+                String college = resultSet.getString("college");
+
+                SwingUtilities.invokeLater(() -> {
+                    user.Name.setText(name);
+                    user.Age.setText(String.valueOf(age));
+                    user.Address.setText(address);
+                    user.Contact.setText(contactNumber);
+                    user.Program.setText(program);
+                    user.College.setText(college);
+                });
+
+                SwingUtilities.invokeLater(() -> {
+                    System.out.println(message.toString());
+                });
+
+                recordFound = true;
+            } else {
+                // Record not found
+                System.out.println("Record with ID " + idNumber + " does not exist.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        throw e;
+
+        return recordFound;
     }
 }
-
-    }
-

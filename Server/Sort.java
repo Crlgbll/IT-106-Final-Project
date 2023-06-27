@@ -5,9 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Sort {
-    public void performSort() {
+    public List<String> performSort() {
+        List<String> sortedData = new ArrayList<>();
+
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_management",
                 "carlogaballo", "")) {
             String query = "SELECT * FROM student_tbl ORDER BY name ASC";
@@ -24,18 +28,22 @@ public class Sort {
                 String program = resultSet.getString("program");
                 String college = resultSet.getString("college");
 
-                // Do something with the retrieved data (e.g., display it)
-                System.out.println("ID: " + id);
-                System.out.println("Name: " + name);
-                System.out.println("Age: " + age);
-                System.out.println("Address: " + address);
-                System.out.println("Contact: " + contact_number);
-                System.out.println("Program: " + program);
-                System.out.println("College: " + college);
-                System.out.println("------------------");
+                // Create a string representation of the student's data
+                String studentData = "ID: " + id + "\n" +
+                        "Name: " + name + "\n" +
+                        "Age: " + age + "\n" +
+                        "Address: " + address + "\n" +
+                        "Contact: " + contact_number + "\n" +
+                        "Program: " + program + "\n" +
+                        "College: " + college + "\n" +
+                        "------------------";
+
+                sortedData.add(studentData);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return sortedData;
     }
 }

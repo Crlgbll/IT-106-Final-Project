@@ -22,7 +22,7 @@ public class Parser {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             try (Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
-                File xmlDocument = new File("C:\\Users\\charm\\OneDrive\\Desktop\\Carlo Things\\Codes\\it106\\IT-106-Project\\client\\student.xml");
+                File xmlDocument = new File("C:\\Users\\charity\\Desktop\\TobeSubmit\\Carlo Things\\IT-106-Project\\IT-106-Project\\Client\\student.xml");
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document doc = builder.parse(xmlDocument);
