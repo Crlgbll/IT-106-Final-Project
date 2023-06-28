@@ -18,10 +18,10 @@ public interface StudentInt extends Remote {
 
     public void parse() throws RemoteException;
 
-    public List<String> performSort() throws RemoteException, SQLException; // New method added
+    public List<String> performSort() throws RemoteException, SQLException; 
 
     public List<String> displayStudentData() throws RemoteException, SQLException;
 
-    public String searchRecord(String idNumber) throws RemoteException, SQLException; // Modified method signature
+    public String searchRecord(String idNumber) throws RemoteException, SQLException;
 
 }

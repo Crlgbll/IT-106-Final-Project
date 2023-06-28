@@ -122,22 +122,31 @@ public class User extends JFrame {
             btnDelete.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String studentID = SearchID.getText();
-                    System.out.println("\n Deleting... \n");
                     try {
-                        boolean deletionStatus = server.delete(studentID);
-                        JOptionPane.showMessageDialog(User.this, "Deleting...");
-                        if (deletionStatus) {
-                            JOptionPane.showMessageDialog(User.this, "Student record was deleted successfully.");
-                            System.out.println("Student " + studentID + " was deleted successfully.");
+                        String recordInfo = server.searchRecord(studentID);
+                        if (recordInfo != null) {
+                            boolean deletionStatus = server.delete(studentID);
+                            JOptionPane.showMessageDialog(User.this, "Deleting...");
+                            System.out.println("\n Deleting... \n");
+                            if (deletionStatus) {
+                                JOptionPane.showMessageDialog(User.this,
+                                        "Student " + studentID + " was deleted successfully.", "Deletion Successful",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                                System.out.println("Student " + studentID + " was deleted successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(User.this, "An error occurred while deleting the user.",
+                                        "Deletion Error", JOptionPane.ERROR_MESSAGE);
+                                System.out.println("An error occurred while deleting the user.");
+                            }
                         } else {
-                            JOptionPane.showMessageDialog(User.this,
-                                    "Student " + studentID + " was not in the Record. Deletion Failed");
-                            System.out.println("Student " + studentID + " was not in the Record. Deletion Failed");
+                            JOptionPane.showMessageDialog(User.this, "Student " + studentID + " does not exist.",
+                                    "Deletion Failed", JOptionPane.WARNING_MESSAGE);
+                            System.out.println("Student " + studentID + " does not exist.");
                         }
-
                     } catch (RemoteException | SQLException e1) {
                         e1.printStackTrace();
-                        JOptionPane.showMessageDialog(User.this, "An error occurred while deleting the user.");
+                        JOptionPane.showMessageDialog(User.this, "An error occurred while deleting the user.",
+                                "Deletion Error", JOptionPane.ERROR_MESSAGE);
                         System.out.println("An error occurred while deleting the user.");
                     }
                 }
@@ -158,10 +167,23 @@ public class User extends JFrame {
                     String college = College.getText();
 
                     try {
-                        // Check if the record exists
-                        server.update(searchID, studentID, name, age, address, contactNumber, program, college);
-                        JOptionPane.showMessageDialog(User.this, "Data updated successfully.");
-                        System.out.println("\nRecord updated successfully \n");
+                        String recordInfo = server.searchRecord(searchID);
+                        boolean updateStatus = server.update(searchID, studentID, name, age, address, contactNumber,
+                                program, college);
+                        if (recordInfo != null) {
+                            if (updateStatus) {
+                                JOptionPane.showMessageDialog(User.this, "Updating...");
+                                JOptionPane.showMessageDialog(User.this, "Data updated successfully.");
+                                System.out.println("\nRecord updated successfully \n");
+                            } else {
+                                JOptionPane.showMessageDialog(User.this, "Data update failed.");
+
+                            }
+
+                        } else {
+                            JOptionPane.showMessageDialog(User.this, "Student " + searchID + " does not exist.");
+                        }
+
                     } catch (Exception e1) {
                         e1.printStackTrace();
                         JOptionPane.showMessageDialog(User.this, "Data update failed.");
@@ -266,7 +288,6 @@ public class User extends JFrame {
             lblID_1.setBounds(331, 82, 97, 21);
             getContentPane().add(lblID_1);
 
-            // Search ID for Update and Delete Method
             SearchID = new JTextField();
             SearchID.setBounds(510, 41, 180, 26);
             getContentPane().add(SearchID);
@@ -279,13 +300,18 @@ public class User extends JFrame {
             btnSearchID.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String studentID = SearchID.getText();
-                    System.out.println("Searching for student with ID: " + studentID);
+
+                    JOptionPane.showMessageDialog(User.this, "Searching for student " + studentID);
+                    System.out.println("Searching for student " + studentID);
                     try {
                         String recordInfo = server.searchRecord(studentID);
                         if (recordInfo != null) {
-                            System.out.println(recordInfo);
+                            JOptionPane.showMessageDialog(User.this, recordInfo, "Record Found",
+                                    JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            System.out.println("Record with ID " + studentID + " does not exist.");
+                            JOptionPane.showMessageDialog(User.this, "Record with ID " + studentID + " does not exist.",
+                                    "Record Not Found", JOptionPane.WARNING_MESSAGE);
+                                       System.out.println("Searching for student " + studentID + " does not exist.");
                         }
                     } catch (RemoteException | SQLException e1) {
                         e1.printStackTrace();
@@ -323,11 +349,6 @@ public class User extends JFrame {
             // Invalid input parameters
             System.out.println("Invalid input parameters. Please provide values for all fields.");
         }
-    }
-
-    public void getUpdatedValues(String search, String id, String name, int age, String address, String contact_number,
-            String program, String college) {
-        System.out.println("");
     }
 
     public void serverConnection(String host, int port) {
