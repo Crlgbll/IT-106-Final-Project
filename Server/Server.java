@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 
 
+
+
 public class Server extends UnicastRemoteObject implements StudentInt {
 
     protected Server() throws RemoteException {
@@ -29,17 +31,19 @@ public class Server extends UnicastRemoteObject implements StudentInt {
     }
 
     @Override
-    public void update(String search, String id, String name, int age, String address, String contact_number,
+    public boolean update(String search, String id, String name, int age, String address, String contact_number,
             String program,
             String college) throws RemoteException, SQLException {
-        Update update = new Update();
-        update.update(search, id, name, age, address, contact_number, program, college);
-    }
+            Update update = new Update();
+            update.update(search, id, name, age, address, contact_number, program, college);
+            return true;
+        }
 
     @Override
-    public void delete(String id) throws RemoteException, SQLException {
+    public boolean delete(String id) throws RemoteException, SQLException {
         Delete deleteObj = new Delete();
         deleteObj.delete(id);
+        return true;
     }
 
     @Override

@@ -9,10 +9,10 @@ import java.util.List;
 public interface StudentInt extends Remote {
     public void sort() throws RemoteException, SQLException;
 
-    public void update(String search, String id, String name, int age, String address, String contact, String program,
+    public boolean update(String search, String id, String name, int age, String address, String contact, String program,
             String college) throws RemoteException, SQLException;
 
-    public void delete(String studentID) throws RemoteException, SQLException;
+    public boolean delete(String id) throws RemoteException, SQLException;
 
     public void display() throws RemoteException, SQLException;
 

@@ -8,9 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Update {
-    public boolean update(String search, String id, String name, int age, String address, String contact_number, String program, String college) throws RemoteException {
+    public boolean update(String search, String id, String name, int age, String address, String contact_number,
+            String program, String college) throws RemoteException {
         // Connect to the database and check if the record exists
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_management", "carlogaballo", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_management",
+                "carlogaballo", "")) {
             // Check if the record exists
             String selectQuery = "SELECT * FROM student_tbl WHERE id_number = ?";
             PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
@@ -19,7 +21,7 @@ public class Update {
 
             if (resultSet.next()) {
                 // The record exists, perform the update
-                 String updateQuery = "UPDATE student_tbl SET id_number = ?, name = ?, age = ?, address = ?, contact_number = ?, program = ?, college = ? WHERE id_number = ?";
+                String updateQuery = "UPDATE student_tbl SET id_number = ?, name = ?, age = ?, address = ?, contact_number = ?, program = ?, college = ? WHERE id_number = ?";
                 PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
                 updateStatement.setString(1, id);
                 updateStatement.setString(2, name);

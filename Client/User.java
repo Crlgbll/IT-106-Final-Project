@@ -63,50 +63,51 @@ public class User extends JFrame {
                     try {
                         List<String> sortedData = server.performSort(); // Retrieve the sorted data from the server
 
-                        // Display the sorted data in the client terminal
-                        System.out.println("Sorted Data:");
+                        // Create a JTextArea to display the sorted data
+                        JTextArea textArea = new JTextArea();
+                        textArea.setEditable(false);
+
+                        // Append the sorted data to the text area
                         for (String studentData : sortedData) {
-                            System.out.println(studentData);
+                            textArea.append(studentData + "\n");
                         }
 
-                        StringBuilder message = new StringBuilder("Sorted Data:\n");
-                        for (String studentData : sortedData) {
-                            message.append(studentData).append("\n");
-                        }
+                        // Create a JScrollPane and add the text area to it
+                        JScrollPane scrollPane = new JScrollPane(textArea);
+                        scrollPane.setPreferredSize(new Dimension(400, 300));
 
-                        // Display the message in a dialog box
-                        JOptionPane.showMessageDialog(User.this, message.toString());
+                        // Display the scrollable message dialog
+                        JOptionPane.showMessageDialog(User.this, scrollPane, "Sorted Data", JOptionPane.PLAIN_MESSAGE);
 
                     } catch (RemoteException | SQLException err) {
                         System.err.println("Client err: " + err.toString());
                     }
-
                 }
             });
-
             JButton btnDisplay = new JButton("Display");
             btnDisplay.setBounds(55, 144, 149, 42);
             getContentPane().add(btnDisplay);
-
             btnDisplay.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(User.this, "Displaying...");
                     try {
                         List<String> studentData = server.displayStudentData();
 
-                        // Display the student data in the user terminal
-                        System.out.println("\n\n-------------------- DISPLAY -----------------\n\n");
+                        // Create a JTextArea to display the student data
+                        JTextArea textArea = new JTextArea();
+                        textArea.setEditable(false);
+
+                        // Append the student data to the text area
                         for (String data : studentData) {
-                            System.out.println(data);
+                            textArea.append(data + "\n");
                         }
 
-                        StringBuilder message = new StringBuilder("Student Data:\n");
-                        for (String data : studentData) {
-                            message.append(data).append("\n");
-                        }
+                        // Create a JScrollPane and add the text area to it
+                        JScrollPane scrollPane = new JScrollPane(textArea);
+                        scrollPane.setPreferredSize(new Dimension(400, 300));
 
-                        // Display the message in a dialog box
-                        JOptionPane.showMessageDialog(User.this, message.toString());
+                        // Display the scrollable message dialog
+                        JOptionPane.showMessageDialog(User.this, scrollPane, "Student Data", JOptionPane.PLAIN_MESSAGE);
 
                     } catch (RemoteException | SQLException err) {
                         System.err.println("Client err: " + err.toString());
@@ -117,14 +118,23 @@ public class User extends JFrame {
             JButton btnDelete = new JButton("Delete");
             btnDelete.setBounds(55, 204, 149, 42);
             getContentPane().add(btnDelete);
-              btnDelete.addActionListener(new ActionListener() {
+            // ActionListener code
+            btnDelete.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    String studentID = student_ID.getText();
-                    System.out.println(studentID);
+                    String studentID = SearchID.getText();
+                    System.out.println("\n Deleting... \n");
                     try {
-                        server.delete(studentID);
-                        JOptionPane.showMessageDialog(User.this, "User deleted successfully.");
-                        System.out.println("User deleted successfully.");
+                        boolean deletionStatus = server.delete(studentID);
+                        JOptionPane.showMessageDialog(User.this, "Deleting...");
+                        if (deletionStatus) {
+                            JOptionPane.showMessageDialog(User.this, "Student record was deleted successfully.");
+                            System.out.println("Student " + studentID + " was deleted successfully.");
+                        } else {
+                            JOptionPane.showMessageDialog(User.this,
+                                    "Student " + studentID + " was not in the Record. Deletion Failed");
+                            System.out.println("Student " + studentID + " was not in the Record. Deletion Failed");
+                        }
+
                     } catch (RemoteException | SQLException e1) {
                         e1.printStackTrace();
                         JOptionPane.showMessageDialog(User.this, "An error occurred while deleting the user.");
@@ -132,7 +142,6 @@ public class User extends JFrame {
                     }
                 }
             });
-
 
             JButton btnUpdate = new JButton("Update");
             btnUpdate.setBounds(55, 264, 149, 42);
@@ -152,7 +161,7 @@ public class User extends JFrame {
                         // Check if the record exists
                         server.update(searchID, studentID, name, age, address, contactNumber, program, college);
                         JOptionPane.showMessageDialog(User.this, "Data updated successfully.");
-                        System.out.println("Hello world");
+                        System.out.println("\nRecord updated successfully \n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                         JOptionPane.showMessageDialog(User.this, "Data update failed.");
@@ -299,7 +308,7 @@ public class User extends JFrame {
                 college != null && !college.isEmpty()) {
             // All input parameters are valid
             Search search = new Search(); // Create an instance of the Search class
-              try {
+            try {
                 String recordInfo = search.searchRecord(id);
                 if (recordInfo != null) {
                     System.out.println(recordInfo);
