@@ -7,19 +7,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.SwingUtilities;
-
-import Client.User;
-
 public class Search {
     // Database connection details
     private String url = "jdbc:mysql://localhost:3306/student_management";
     private String username = "carlogaballo";
     private String password = "";
 
-    public boolean searchRecord(String idNumber, User user) throws RemoteException, SQLException {
+    public String searchRecord(String idNumber) throws RemoteException, SQLException {
         StringBuilder message = new StringBuilder();
-        boolean recordFound = false;
+        String recordInfo = null;
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
             String query = "SELECT * FROM student_tbl WHERE id_number = ?";
@@ -40,27 +36,7 @@ public class Search {
                 message.append("College: ").append(resultSet.getString("college")).append("\n");
                 message.append("------------------\n");
 
-                String name = resultSet.getString("name");
-                int age = resultSet.getInt("age");
-                String address = resultSet.getString("address");
-                String contactNumber = resultSet.getString("contact_number");
-                String program = resultSet.getString("program");
-                String college = resultSet.getString("college");
-
-                SwingUtilities.invokeLater(() -> {
-                    user.Name.setText(name);
-                    user.Age.setText(String.valueOf(age));
-                    user.Address.setText(address);
-                    user.Contact.setText(contactNumber);
-                    user.Program.setText(program);
-                    user.College.setText(college);
-                });
-
-                SwingUtilities.invokeLater(() -> {
-                    System.out.println(message.toString());
-                });
-
-                recordFound = true;
+                recordInfo = message.toString();
             } else {
                 // Record not found
                 System.out.println("Record with ID " + idNumber + " does not exist.");
@@ -70,6 +46,6 @@ public class Search {
             throw e;
         }
 
-        return recordFound;
+        return recordInfo;
     }
 }

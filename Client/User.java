@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import Server.Search;
 import Server.StudentInt;
 
 public class User extends JFrame {
@@ -116,7 +117,7 @@ public class User extends JFrame {
             JButton btnDelete = new JButton("Delete");
             btnDelete.setBounds(55, 204, 149, 42);
             getContentPane().add(btnDelete);
-            btnDelete.addActionListener(new ActionListener() {
+              btnDelete.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String studentID = student_ID.getText();
                     System.out.println(studentID);
@@ -126,11 +127,12 @@ public class User extends JFrame {
                         System.out.println("User deleted successfully.");
                     } catch (RemoteException | SQLException e1) {
                         e1.printStackTrace();
-                        JOptionPane.showMessageDialog(User.this, "User deletion failed.");
-                        System.out.println("User deletion failed.");
+                        JOptionPane.showMessageDialog(User.this, "An error occurred while deleting the user.");
+                        System.out.println("An error occurred while deleting the user.");
                     }
                 }
             });
+
 
             JButton btnUpdate = new JButton("Update");
             btnUpdate.setBounds(55, 264, 149, 42);
@@ -267,12 +269,13 @@ public class User extends JFrame {
 
             btnSearchID.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JTextField searchID = SearchID;
-                    String studentID = searchID.getText();
+                    String studentID = SearchID.getText();
                     System.out.println("Searching for student with ID: " + studentID);
                     try {
-                        boolean recordFound = server.search(studentID, User.this);
-                        if (!recordFound) {
+                        String recordInfo = server.searchRecord(studentID);
+                        if (recordInfo != null) {
+                            System.out.println(recordInfo);
+                        } else {
                             System.out.println("Record with ID " + studentID + " does not exist.");
                         }
                     } catch (RemoteException | SQLException e1) {
@@ -284,6 +287,38 @@ public class User extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void recordSearch(String id, String name, int age, String address, String contact_number, String program,
+            String college) {
+        if (id != null && !id.isEmpty() &&
+                name != null && !name.isEmpty() &&
+                address != null && !address.isEmpty() &&
+                contact_number != null && !contact_number.isEmpty() &&
+                program != null && !program.isEmpty() &&
+                college != null && !college.isEmpty()) {
+            // All input parameters are valid
+            Search search = new Search(); // Create an instance of the Search class
+              try {
+                String recordInfo = search.searchRecord(id);
+                if (recordInfo != null) {
+                    System.out.println(recordInfo);
+                } else {
+                    System.out.println("Record with ID " + id + " does not exist.");
+                }
+            } catch (RemoteException | SQLException e) {
+                e.printStackTrace();
+                // Handle the exception appropriately
+            }
+        } else {
+            // Invalid input parameters
+            System.out.println("Invalid input parameters. Please provide values for all fields.");
+        }
+    }
+
+    public void getUpdatedValues(String search, String id, String name, int age, String address, String contact_number,
+            String program, String college) {
+        System.out.println("");
     }
 
     public void serverConnection(String host, int port) {

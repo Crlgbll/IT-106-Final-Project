@@ -16,7 +16,7 @@ public class Delete {
             } else {
                 String deleteQuery = "DELETE FROM student_tbl WHERE id_number = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
-                preparedStatement.setString(1, id);
+                preparedStatement.setString(1,id);
 
                 // Execute the delete statement
                 int rowsAffected = preparedStatement.executeUpdate();

@@ -1,5 +1,6 @@
 package Server;
 
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -7,9 +8,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import Client.User;
-
-import java.rmi.RemoteException;
 
 public class Server extends UnicastRemoteObject implements StudentInt {
 
@@ -44,7 +42,6 @@ public class Server extends UnicastRemoteObject implements StudentInt {
         deleteObj.delete(id);
     }
 
-
     @Override
     public void display() throws RemoteException, SQLException {
         Display display = new Display();
@@ -63,10 +60,12 @@ public class Server extends UnicastRemoteObject implements StudentInt {
         parse.displayXML();
     }
 
+  
+    
     @Override
-    public void search(String idNumber, User user) throws RemoteException, SQLException {
+    public String searchRecord(String idNumber) throws RemoteException, SQLException {
         Search search = new Search();
-        search.searchRecord(idNumber, user);
+        return search.searchRecord(idNumber);
     }
 
     public static void main(String[] args) {
