@@ -59,9 +59,10 @@ public class Server extends UnicastRemoteObject implements StudentInt {
     }
 
     @Override
-    public void parse() throws RemoteException {
+    public boolean parse() throws RemoteException {
         Parser parse = new Parser();
         parse.displayXML();
+        return true;
     }
 
   

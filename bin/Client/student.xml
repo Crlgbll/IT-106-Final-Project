@@ -9,6 +9,69 @@
         <college>CCIS</college>
     </student>
     <student>
+        <name>tyncntyc gvfunyfuyf ggggg, Ivie</name>
+        <id>211-00768</id>
+        <age>21</age>
+        <address>Ampayon, Butuan City</address>
+        <contact>09759362962</contact>
+        <program>BSBio</program>
+        <college>CMNS</college>
+    </student>
+        <student>
+        <name>Valez, Amor</name>
+        <id>211-00874</id>
+        <age>21</age>
+        <address>San Juan, Surigao del Norte</address>
+        <contact>09835204682</contact>
+        <program>BSAgriculture</program>
+        <college>CAA</college>
+    </student>
+        <student>
+        <name>Crisostomo, Junelyn</name>
+        <id>211-07303</id>
+        <age>21</age>
+        <address>San Jose, Dinagat Islands</address>
+        <contact>09369271073</contact>
+        <program>BSPsych</program>
+        <college>CHASS</college>
+    </student>
+        <student>
+        <name>Sumalinog, Aihley</name>
+        <id>211-00464</id>
+        <age>21</age>
+        <address>Baan, Butuan City</address>
+        <contact>09074362836</contact>
+        <program>BSCE</program>
+        <college>CEGS</college>
+    </student>
+        <student>
+        <name>Villabeto, Ashley</name>
+        <id>211-01093</id>
+        <age>20</age>
+        <address>Carmen, Agusan del Norte</address>
+        <contact>09208163937</contact>
+        <program>BSForestry</program>
+        <college>COFES</college>
+    </student>
+        <student>
+        <name>Cruz, Kyla</name>
+        <id>211-00143</id>
+        <age>20</age>
+        <address>Claver, Surigao del Norte</address>
+        <contact>09063452865</contact>
+        <program>BSED Science</program>
+        <college>CED</college>
+    </student> 
+    <student>
+        <name>Aclan, Steffany</name>
+        <id>211-11003</id>
+        <age>21</age>
+        <address>Villa Kannanga, Butuan City</address>
+        <contact>09151320921</contact>
+        <program>BSIS</program>
+        <college>CCIS</college>
+    </student>
+    <student>
         <name>Almacin, Enjil</name>
         <id>211-00638</id>
         <age>20</age>

@@ -16,7 +16,7 @@ public interface StudentInt extends Remote {
 
     public void display() throws RemoteException, SQLException;
 
-    public void parse() throws RemoteException;
+    public boolean parse() throws RemoteException;
 
     public List<String> performSort() throws RemoteException, SQLException; 
 

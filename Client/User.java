@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import Server.Search;
+import Server.Parser;
 import Server.StudentInt;
 
 public class User extends JFrame {
@@ -194,16 +195,24 @@ public class User extends JFrame {
             JButton btnExtractXML = new JButton("Extract XML");
             btnExtractXML.setBounds(55, 327, 149, 42);
             getContentPane().add(btnExtractXML);
+
+            // Assuming you have an instance of the Parser class named 'parser'
             btnExtractXML.addActionListener(new ActionListener() {
+                Parser parser = new Parser();
+
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(User.this, "Extracting Data from XML...");
-                    try {
-                        server.parse();
-                    } catch (RemoteException err) {
-                        err.printStackTrace();
+                    int existingRecords = parser.displayXML();
+                    if (existingRecords == 0) {
+                        JOptionPane.showMessageDialog(User.this, "Data Extracted Successfully");
+                    } else if (existingRecords == -1) {
+                        JOptionPane.showMessageDialog(User.this, "An error occurred during data extraction.");
+                    } else {
+                        JOptionPane.showMessageDialog(User.this, "Data already exists in the database.");
                     }
                 }
             });
+
             // Name for Update Method
             JLabel lblNewLabel = new JLabel("Name");
             lblNewLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
@@ -311,7 +320,7 @@ public class User extends JFrame {
                         } else {
                             JOptionPane.showMessageDialog(User.this, "Record with ID " + studentID + " does not exist.",
                                     "Record Not Found", JOptionPane.WARNING_MESSAGE);
-                                       System.out.println("Searching for student " + studentID + " does not exist.");
+                            System.out.println("Searching for student " + studentID + " does not exist.");
                         }
                     } catch (RemoteException | SQLException e1) {
                         e1.printStackTrace();
